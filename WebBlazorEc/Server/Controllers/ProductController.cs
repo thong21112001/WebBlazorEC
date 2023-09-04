@@ -35,7 +35,8 @@ namespace WebBlazorEc.Server.Controllers
         };
 
         [HttpGet]
-        public async Task<IActionResult> GetProduct()
+        //Sửa chỗ này để get dữ liệu từ swaggerUI
+        public async Task<ActionResult<List<Product>>> GetProduct()
         {
             return Ok(Products);
         }
