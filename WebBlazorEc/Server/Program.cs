@@ -1,11 +1,16 @@
 ﻿global using WebBlazorEc.Shared;    // khi sử dụng global thì nó sẽ tự động add vào các class
 global using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
+using WebBlazorEc.Server.Data;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
