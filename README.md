@@ -10,7 +10,7 @@ Sử dụng framework Blazor và net core 7
   </p>
 - Ta sẽ sử dụng lệnh trong packages manager console:
   <p>
-    add-migrations CreateInitial
+    add-migration CreateInitial
     <br/>
     và
     <br/>
