@@ -1,6 +1,7 @@
 ﻿global using WebBlazorEc.Shared;    // khi sử dụng global thì nó sẽ tự động add vào các class
 global using WebBlazorEc.Server.Data;
 global using Microsoft.EntityFrameworkCore;
+global using WebBlazorEc.Server.Services.ProductService;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
 
@@ -16,6 +17,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IProductService,ProductService>();
 
 var app = builder.Build();
 

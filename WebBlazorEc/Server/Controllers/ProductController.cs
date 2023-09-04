@@ -6,19 +6,19 @@ namespace WebBlazorEc.Server.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly DataContext _dataContext;
+        private readonly IProductService _productService;
 
-        public ProductController(DataContext data)
+        public ProductController(IProductService productService)
         {
-            _dataContext = data;
+            _productService = productService;
         }
 
         [HttpGet]
         //Sửa chỗ này để get dữ liệu từ swaggerUI
-        public async Task<ActionResult<List<Product>>> GetProduct()
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProducts()
         {
-            var products = await _dataContext.Products.ToListAsync();
-            return Ok(products);
+            var result = await _productService.GetProductAsync();
+            return Ok(result);
         }
     }
 }
