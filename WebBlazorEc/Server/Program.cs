@@ -1,4 +1,5 @@
 ﻿global using WebBlazorEc.Shared;    // khi sử dụng global thì nó sẽ tự động add vào các class
+global using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
