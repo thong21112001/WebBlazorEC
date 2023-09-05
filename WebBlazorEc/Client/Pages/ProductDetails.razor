@@ -3,7 +3,7 @@
 
 @if (product == null)
 {
-    <span>Loading product details ...</span>
+    <span>@message</span>
 }else
 {
     <div class="media">
@@ -27,13 +27,22 @@
 
 @code {
     private Product? product = null;
+    private string message = string.Empty;
 
     [Parameter]
     public int Id { get; set; }
 
     protected async override Task OnParametersSetAsync()
     {
-        product = ProductService.Products.Find(x => x.Id == Id);
+        message = "Loading product...";
+        var result = await ProductService.GetProductAsync(Id);
+        if (!result.Success)
+        {
+            message = result.Message;
+        }else
+        {
+            product = result.Data;
+        }
     }
 
 }
