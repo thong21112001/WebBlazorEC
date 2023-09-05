@@ -20,5 +20,14 @@ namespace WebBlazorEc.Server.Controllers
             var result = await _productService.GetProductAsync();
             return Ok(result);
         }
+
+        //[HttpGet]
+        //[Route("{productId}")]
+        [HttpGet("{productId}")]
+        public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId)
+        {
+            var result = await _productService.GetProductAsync(productId);
+            return Ok(result);
+        }
     }
 }

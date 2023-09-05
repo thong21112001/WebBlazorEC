@@ -18,5 +18,24 @@
 
             return response;
         }
+
+        public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
+        {
+            var response = new ServiceResponse<Product>();
+            //lấy sản phẩm từ csdl với bất đồng bộ, cung cấp id sản phẩm đề tìm
+            var product = await _context.Products.FindAsync(productId);
+
+            if (product == null)    //nếu không có sản phẩm
+            {
+                response.Success = false;
+                response.Message = "Sorry, but this produt does not exist.";
+            }
+            else //Ngược lại
+            {
+                response.Data = product;
+            }
+
+            return response;
+        }
     }
 }
