@@ -19,7 +19,6 @@
             {
                 Categories = response.Data; // gán dữ liệu lấy về từ response là Data cho categories
             }
-            
         }
     }
 }
