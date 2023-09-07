@@ -1,5 +1,19 @@
 ﻿@page "/"
+@page "/{categoryUrl}"  @* Thêm một tuyến Url mới *@
+@inject IProductService ProductService
 
 <PageTitle>My WEB</PageTitle>
 
 <ProductList/>
+
+@code{
+    [Parameter]
+    public string? CategoryUrl { get; set; } = null;
+
+    //Khi nào có tham số CategoryUrl là nhận được url, sau đó gọi đến phần nhận sản phẩm theo
+    //CategoryUrl từ ProductList.razor
+    protected async override Task OnParametersSetAsync()
+    {
+        await ProductService.GetProducts(CategoryUrl);
+    }
+}

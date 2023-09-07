@@ -1,4 +1,5 @@
 ﻿@inject IProductService ProductService
+@implements IDisposable
 
 @if (ProductService.Products == null || ProductService.Products.Count == 0)
 {
@@ -31,8 +32,14 @@
     </ul>
 }
 @code {
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await ProductService.GetProducts();
+        //Thông báo cho component danh mục đã thay đổi và hiển thị lại các sản phẩm đúng với danh mục
+        ProductService.ProductsChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ProductService.ProductsChanged -= StateHasChanged;
     }
 }
