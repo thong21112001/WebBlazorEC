@@ -16,6 +16,18 @@
             </h2>
 
             <p>@product.Description</p>
+            @* Hộp chọn để có thể lựa các biến thể khác của sản phẩm *@
+            @if (product.ProductVariants != null && product.ProductVariants.Count > 1)
+            {
+                <div class="mb-3">
+                    <select class="form-select" @bind="currentTypeId">
+                        @foreach (var item in product.ProductVariants)
+                        {
+                            <option value="@item.ProductTypeId">@item.ProductType.Name</option>
+                        }
+                    </select>
+                </div>
+            }
 
             @if (GetSelectedProductVariant() != null)
             {
