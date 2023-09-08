@@ -17,9 +17,18 @@
 
             <p>@product.Description</p>
 
-            <h4 class="price">
-                @* $@product.Price *@
-            </h4>
+            @if (GetSelectedProductVariant() != null)
+            {
+                if (GetSelectedProductVariant().OriginalPrice > GetSelectedProductVariant().Price)
+                {
+                    <h6 class="text-muted text-decoration-line-through">
+                        $@GetSelectedProductVariant().OriginalPrice
+                    </h6>
+                }
+                <h4 class="price">
+                    $@GetSelectedProductVariant().Price
+                </h4>
+            }
         </div>
     </div>
 }
@@ -28,6 +37,7 @@
 @code {
     private Product? product = null;
     private string message = string.Empty;
+    private int currentTypeId = 1;
 
     [Parameter]
     public int Id { get; set; }
@@ -39,10 +49,21 @@
         if (!result.Success)
         {
             message = result.Message;
-        }else
+        }
+        else
         {
             product = result.Data;
+            if (product.ProductVariants.Count > 0)
+            {
+                currentTypeId = product.ProductVariants[0].ProductTypeId;
+            }
         }
+    }
+
+    private ProductVariant GetSelectedProductVariant()
+    {
+        var procVariant = product.ProductVariants.FirstOrDefault(x => x.ProductTypeId == currentTypeId);
+        return procVariant;
     }
 
 }
