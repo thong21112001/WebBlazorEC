@@ -25,7 +25,7 @@
                         @item.Description
                     </p>
 
-                    <h5 class="price">@* $@item.Price *@</h5>
+                    <h5 class="price">@GetPriceText(item)</h5>
                 </div>
             </li>
         }
@@ -41,5 +41,22 @@
     public void Dispose()
     {
         ProductService.ProductsChanged -= StateHasChanged;
+    }
+
+    //Hiển thị đơn giá bắt đầu cho sản phẩm vì có nhiều biến thể từ sản phẩm
+    private string GetPriceText(Product product)
+    {
+        var result = product.ProductVariants;
+        if (result.Count == 0)
+        {
+            return string.Empty;
+        }
+        else if (result.Count == 1)
+        {
+            return $"${result[0].Price}";   //Dành cho sản phẩm không biến thể có 1 giá
+        }
+        //Đây là dành cho biến thể
+        decimal minPrice = result.Min(v => v.Price);
+        return $"Starting at ${minPrice}";
     }
 }
