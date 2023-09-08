@@ -55,5 +55,19 @@
 
             return response;
         }
+
+        //Tìm kiếm sản phẩm 
+        public async Task<ServiceResponse<List<Product>>> SearchProducts(string searchText)
+        {
+            var response = new ServiceResponse<List<Product>>
+            {
+                Data = await _context.Products
+                        .Where(x => x.Title.ToLower().Contains(searchText.ToLower())
+                            || x.Description.ToLower().Contains(searchText.ToLower()))
+                        .Include(p => p.ProductVariants)
+                        .ToListAsync()
+            };
+            return response;
+        }
     }
 }
