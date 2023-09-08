@@ -56,18 +56,55 @@
             return response;
         }
 
+        //Đề xuất khi gõ phần tìm kiếm sản phẩm
+        public async Task<ServiceResponse<List<string>>> GetProductsSearchSuggestions(string searchText)
+        {
+            var products = await FindProductsBySeacrhText(searchText);
+
+            List<string> result =  new List<string>();
+            foreach (var item in products)
+            {
+                if (item.Title.Contains(searchText,StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(item.Title);
+                }
+
+                if (item.Description != null)
+                {
+                    var punctuation = item.Description.Where(char.IsPunctuation).Distinct().ToArray();
+                    var words = item.Description.Split().Select(x=>x.Trim(punctuation));
+
+                    foreach (var word in words)
+                    {
+                        if (word.Contains(searchText,StringComparison.OrdinalIgnoreCase) &&
+                            !result.Contains(word))
+                        {
+                            result.Add(word);
+                        }
+                    }
+                }
+            }
+            
+            return new ServiceResponse<List<string>> { Data = result };
+        }
+
         //Tìm kiếm sản phẩm 
         public async Task<ServiceResponse<List<Product>>> SearchProducts(string searchText)
         {
             var response = new ServiceResponse<List<Product>>
             {
-                Data = await _context.Products
-                        .Where(x => x.Title.ToLower().Contains(searchText.ToLower())
-                            || x.Description.ToLower().Contains(searchText.ToLower()))
-                        .Include(p => p.ProductVariants)
-                        .ToListAsync()
+                Data = await FindProductsBySeacrhText(searchText)
             };
             return response;
+        }
+
+        private async Task<List<Product>> FindProductsBySeacrhText(string searchText)
+        {
+            return await _context.Products
+                                    .Where(x => x.Title.ToLower().Contains(searchText.ToLower())
+                                        || x.Description.ToLower().Contains(searchText.ToLower()))
+                                    .Include(p => p.ProductVariants)
+                                    .ToListAsync();
         }
     }
 }
