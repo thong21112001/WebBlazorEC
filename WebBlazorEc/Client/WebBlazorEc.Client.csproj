@@ -16,4 +16,16 @@
     <ProjectReference Include="..\Shared\WebBlazorEc.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\Search.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Shared\Search.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Shared\Search.razor" />
+  </ItemGroup>
+
 </Project>
