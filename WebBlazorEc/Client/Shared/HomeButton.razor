@@ -1,0 +1,15 @@
+﻿@* 1 phần của trang giao diện, nút home về trang chủ *@
+@inject NavigationManager NavigationManager
+
+<div class="btn btn-outline-primary home-button"
+        @onclick = "GoToHome">
+        WebBlazorEc
+</div>
+
+
+@code {
+    private void GoToHome()
+    {
+        NavigationManager.NavigateTo("");
+    }
+}
