@@ -52,6 +52,7 @@
 
         public async Task SearchProducts(string searchText, int page = 1)
         {
+            LastSearchText = searchText;
             //Cái này trỏ tới api của server của ProductController hàm SearchProducts
             var result = await _http.GetFromJsonAsync<ServiceResponse<ProductSearchResult>>($"api/product/search/{searchText}/{page}");
             if (result != null && result.Data != null)
