@@ -4,7 +4,7 @@
 @inject IProductService ProductService
 
 <PageTitle>My WEB</PageTitle>
-@if (SearchText == null || CategoryUrl == null)
+@if (SearchText == null && CategoryUrl == null)
 {
     <FeaturedProducts/>
 }else

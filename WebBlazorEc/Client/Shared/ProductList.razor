@@ -30,7 +30,7 @@
             </li>
         }
     </ul>
-    for (int i = 0; i <= ProductService.PageCount; i++)
+    for (var i = 1; i <= ProductService.PageCount; i++)
     {
         <a href="/search/@ProductService.LastSearchText/@i" class="btn @(i==ProductService.CurrentPage ? "btn-info" : "btn-outline-info") page-selection">@i</a>
     }
