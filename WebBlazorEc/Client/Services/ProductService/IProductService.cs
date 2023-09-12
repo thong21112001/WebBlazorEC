@@ -6,10 +6,13 @@
         event Action ProductsChanged;
         List<Product> Products { get; set; }
         string Message { get; set; }    //Dùng để hiện thị thông báo trong ô tìm kiếm
+        int CurrentPage { get; set; }
+        int PageCount { get; set; }
+        string LastSearchText { get; set; }
         //Thay đổi phương thức lấy tất cả sản phẩm bằng cách thêm categoryUrl
         Task GetProducts(string? categoryUrl = null);
         Task<ServiceResponse<Product>> GetProductAsync(int productId);
-        Task SearchProducts(string searchText);
+        Task SearchProducts(string searchText,int page);
         Task<List<string>> GetProductsSearchSuggestions(string searchText);
     }
 }
