@@ -9,6 +9,7 @@ namespace WebBlazorEc.Shared
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         //Xoá column Price đi vì trong biến thể của nó đã có Price và OriginalPrice
+        public bool Featured { get; set; } = false; //Sản phẩm hot hay không
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
         public List<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
