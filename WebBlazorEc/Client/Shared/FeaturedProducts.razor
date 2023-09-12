@@ -1,0 +1,51 @@
+﻿@inject IProductService ProductService
+@implements IDisposable
+
+<center>
+    <h2>Top products of today</h2>
+</center>
+
+@if (ProductService.Products == null || ProductService.Products.Count == 0)
+{
+    <span>@ProductService.Message</span>
+}else
+{
+    <div class="container">
+        @foreach (var item in ProductService.Products)
+        {
+            if (item.Featured)
+            {
+                <div class="featured-product">
+                    <div>
+                        <a href="product/@item.Id">
+                            <img src="@item.ImageUrl"/>
+                        </a>
+                    </div>
+                    <h4>
+                        <a href="product/@item.Id">
+                            @item.Title
+                        </a>
+                    </h4>
+                    @if (item.ProductVariants != null && item.ProductVariants.Count >0)
+                    {
+                        <h5 class="price">
+                            $@item.ProductVariants[0].Price
+                        </h5>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        ProductService.ProductsChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ProductService.ProductsChanged -= StateHasChanged;
+    }
+}
