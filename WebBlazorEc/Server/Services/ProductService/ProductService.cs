@@ -9,6 +9,15 @@
             _context = context;
         }
 
+        public async Task<ServiceResponse<List<Product>>> GetFeaturedProducts()
+        {
+            var response = new ServiceResponse<List<Product>>
+            {
+                Data = await _context.Products.Where(x=>x.Featured).Include(p=>p.ProductVariants).ToListAsync()
+            };    
+            return response;
+        }
+
         //Lấy danh sách sản phẩm
         public async Task<ServiceResponse<List<Product>>> GetProductAsync()
         {

@@ -25,7 +25,7 @@
             //Nếu như không có categoryUrl thì lấy toàn bộ sản phẩm, ngược lại
             //Thì lấy sản phẩm theo categoryUrl
             var result = categoryUrl == null ?
-                await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/Product") :
+                await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/Product/featured") :
                 await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/Product/category/{categoryUrl}");
             
             if (result != null && result.Data != null)

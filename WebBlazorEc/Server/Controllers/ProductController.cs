@@ -53,5 +53,13 @@ namespace WebBlazorEc.Server.Controllers
             var result = await _productService.GetProductsSearchSuggestions(searchText);
             return Ok(result);
         }
+
+        //Url : api/[controller]/featured
+        [HttpGet("featured")]
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetFeaturedProducts()
+        {
+            var result = await _productService.GetFeaturedProducts();
+            return Ok(result);
+        }
     }
 }
