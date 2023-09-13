@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace WebBlazorEc.Server.Controllers
+﻿namespace WebBlazorEc.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
