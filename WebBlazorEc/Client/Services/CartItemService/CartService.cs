@@ -5,10 +5,12 @@ namespace WebBlazorEc.Client.Services.CartItemService
     public class CartService : ICartService
     {
         private readonly ILocalStorageService _localStorageService;
+        private readonly HttpClient _http;
 
-        public CartService(ILocalStorageService localStorageService)
+        public CartService(ILocalStorageService localStorageService, HttpClient http)
         {
             _localStorageService = localStorageService;
+            _http = http;
         }
 
         public event Action OnChange;
@@ -38,6 +40,14 @@ namespace WebBlazorEc.Client.Services.CartItemService
                 cart = new List<CartItem>();
             }
             return cart;
+        }
+
+        public async Task<List<CartProductResponse>> GetCartProducts()
+        {
+            var cartItems = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+            var response = await _http.PostAsJsonAsync("api/cart/products", cartItems);
+            var cartProducts = await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartProductResponse>>>();
+            return cartProducts.Data;
         }
     }
 }
