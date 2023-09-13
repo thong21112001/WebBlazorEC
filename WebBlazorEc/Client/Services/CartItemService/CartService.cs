@@ -26,6 +26,7 @@ namespace WebBlazorEc.Client.Services.CartItemService
 
             //sử dụng bộ nhớ cục bộ để đặt thời gian
             await _localStorageService.SetItemAsync("cart", cart);
+            OnChange.Invoke();  //Sự thay đổi
         }
 
         //Lấy danh sách sp của giỏ hàng
