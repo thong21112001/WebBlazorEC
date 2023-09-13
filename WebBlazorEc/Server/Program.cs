@@ -3,7 +3,7 @@ global using WebBlazorEc.Server.Data;
 global using Microsoft.EntityFrameworkCore;
 global using WebBlazorEc.Server.Services.ProductService;
 global using WebBlazorEc.Server.Services.CategoryService;
-global using WebBlazorEc.Client.Services.CartItemService;
+global using WebBlazorEc.Server.Services.CartItemService;
 global using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
-builder.Services.AddScoped<ICartService,CartService>();
+builder.Services.AddScoped<ICartItemService,CartItemService>();
 
 var app = builder.Build();
 
