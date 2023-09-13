@@ -1,7 +1,7 @@
-﻿using WebBlazorEc.Server.Services.CartItemService;
-
-namespace WebBlazorEc.Server.Controllers
+﻿namespace WebBlazorEc.Server.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class CartController : Controller
     {
         private readonly ICartItemService _cartItemService;
