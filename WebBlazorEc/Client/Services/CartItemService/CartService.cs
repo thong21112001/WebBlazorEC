@@ -83,5 +83,22 @@ namespace WebBlazorEc.Client.Services.CartItemService
                 OnChange.Invoke();
             }
         }
+
+        public async Task UpdateQuantity(CartProductResponse product)
+        {
+            var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+
+            if (cart == null)
+                return;
+
+            var cartItem = cart.Find(x => x.ProductId == product.ProductId && x.ProductTypeId == product.ProductTypeId);
+
+            if (cartItem != null)
+            {
+                cartItem.Quantity = product.Quantity;
+                //Đặt lại danh sách sản phẩm sau khi xoá
+                await _localStorageService.SetItemAsync("cart", cart);
+            }
+        }
     }
 }
