@@ -1,9 +1,13 @@
-﻿.show-menu{
-    display:block;
+﻿.button-register {
+    margin-left: .5em;
+}
+
+.show-menu {
+    display: block;
 }
 
 .user-button{
-    margin-right: .5em;
+    /*margin-right: .5em;*/
 }
 
 .top-row a {
