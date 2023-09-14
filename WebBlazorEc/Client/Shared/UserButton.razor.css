@@ -1,0 +1,15 @@
+﻿.show-menu{
+    display:block;
+}
+
+.user-button{
+    margin-right: .5em;
+}
+
+.top-row a {
+    margin-left: 0;
+}
+
+.dropdown-item{
+    background-color:white;
+}
