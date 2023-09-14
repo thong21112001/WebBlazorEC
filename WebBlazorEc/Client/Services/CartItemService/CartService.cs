@@ -49,5 +49,25 @@ namespace WebBlazorEc.Client.Services.CartItemService
             var cartProducts = await response.Content.ReadFromJsonAsync<ServiceResponse<List<CartProductResponse>>>();
             return cartProducts.Data;
         }
+
+        public async Task RemoveProductFromCart(int productId, int productTypeId)
+        {
+            //Lấy sp từ bộ nhớ local -> trỏ đến Controller Cart của Server
+            var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+
+            if (cart == null)
+                return;
+
+            var cartItem = cart.Find(x => x.ProductId == productId && x.ProductTypeId == productTypeId);
+
+            if (cartItem != null)
+            {
+                cart.Remove(cartItem);
+
+                //Đặt lại danh sách sản phẩm sau khi xoá
+                await _localStorageService.SetItemAsync("cart", cart);
+                OnChange.Invoke();
+            }
+        }
     }
 }
