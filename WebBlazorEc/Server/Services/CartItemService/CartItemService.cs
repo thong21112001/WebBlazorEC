@@ -43,7 +43,8 @@
                     ImageUrl = product.ImageUrl,
                     Price = productVariant.Price,
                     ProductType = productVariant.ProductType.Name,
-                    ProductTypeId = productVariant.ProductTypeId
+                    ProductTypeId = productVariant.ProductTypeId,
+                    Quantity = item.Quantity    //Thêm số lượng sp vào này của bài 47
                 };
                 result.Data.Add(cartProduct);
             }

@@ -4,5 +4,6 @@
     {
         public int ProductId { get; set; }
         public int ProductTypeId { get; set; }
+        public int Quantity { get; set; }   //Thêm số lượng cho sản phẩm bài 46
     }
 }

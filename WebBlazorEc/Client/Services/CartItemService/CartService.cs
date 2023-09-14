@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using WebBlazorEc.Shared;
 
 namespace WebBlazorEc.Client.Services.CartItemService
 {
@@ -23,8 +24,21 @@ namespace WebBlazorEc.Client.Services.CartItemService
             {
                 cart = new List<CartItem>();
             }
-            //Thêm sp vào CartItem
-            cart.Add(cartItem);
+
+            //Bài 47
+            //Xem sp cùng nhau thì tăng số lượng
+            var sameItem = cart.Find(x => x.ProductId == cartItem.ProductId && x.ProductTypeId == cartItem.ProductTypeId);
+            if (sameItem == null)
+            {
+                //Thêm sp vào CartItem
+                cart.Add(cartItem);
+            }
+            else
+            {
+                sameItem.Quantity += cartItem.Quantity;
+            }
+            //End Bài 47
+
 
             //sử dụng bộ nhớ cục bộ để đặt thời gian
             await _localStorageService.SetItemAsync("cart", cart);
