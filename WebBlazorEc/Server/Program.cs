@@ -4,6 +4,7 @@ global using Microsoft.EntityFrameworkCore;
 global using WebBlazorEc.Server.Services.ProductService;
 global using WebBlazorEc.Server.Services.CategoryService;
 global using WebBlazorEc.Server.Services.CartItemService;
+global using WebBlazorEc.Server.Services.AuthService;
 global using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
@@ -24,6 +25,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<ICartItemService,CartItemService>();
+builder.Services.AddScoped<IAuthService,AuthService>();
 
 var app = builder.Build();
 
