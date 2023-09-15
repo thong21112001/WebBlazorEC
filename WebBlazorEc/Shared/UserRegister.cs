@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+//Dùng lớp này để xác thực đăng ký chứ không làm bảng
 namespace WebBlazorEc.Shared
 {
     public class UserRegister
