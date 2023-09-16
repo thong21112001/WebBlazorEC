@@ -4,6 +4,7 @@ global using System.Net.Http.Json;
 global using WebBlazorEc.Client.Services.ProductService;
 global using WebBlazorEc.Client.Services.CategoryService;
 global using WebBlazorEc.Client.Services.CartItemService;
+global using WebBlazorEc.Client.Services.AuthService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Blazored.LocalStorage;
@@ -18,5 +19,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 await builder.Build().RunAsync();
