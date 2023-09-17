@@ -2,7 +2,7 @@
 
 namespace WebBlazorEc.Shared
 {
-    internal class UserLogin
+    public class UserLogin
     {
         [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
