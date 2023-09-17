@@ -13,10 +13,23 @@ namespace WebBlazorEc.Server.Services.AuthService
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
-            var respone = new ServiceResponse<string>
+            var respone = new ServiceResponse<string>();
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
+            
+            if (user != null)
             {
-                Data = "token"
-            };
+                respone.Success = false;
+                respone.Message = "User not found.";
+            }
+            else if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            {
+                respone.Success = false;
+                respone.Message = "Wrong password.";
+            }
+            else
+            {
+                respone.Data = "token";
+            }
             return respone;
         }
 
@@ -61,6 +74,15 @@ namespace WebBlazorEc.Server.Services.AuthService
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(passW));
 
+            }
+        }
+
+        private bool VerifyPasswordHash(string passW, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(passW));
+                return computedHash.SequenceEqual(passwordHash);
             }
         }
     }
