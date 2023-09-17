@@ -11,6 +11,15 @@ namespace WebBlazorEc.Server.Services.AuthService
             _context = context;
         }
 
+        public async Task<ServiceResponse<string>> Login(string email, string password)
+        {
+            var respone = new ServiceResponse<string>
+            {
+                Data = "token"
+            };
+            return respone;
+        }
+
         public async Task<ServiceResponse<int>> RegisterUser(User user, string password)
         {
             if (await UserExits(user.Email))
