@@ -9,6 +9,12 @@
             _http = http;
         }
 
+        public async Task<ServiceResponse<string>> Login(UserLogin userRequest)
+        {
+            var result = await _http.PostAsJsonAsync("api/auth/login", userRequest);
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+        }
+
         public async Task<ServiceResponse<int>> RegisterUser(UserRegister userRequest)
         {
             var result = await _http.PostAsJsonAsync("api/auth/register", userRequest);
