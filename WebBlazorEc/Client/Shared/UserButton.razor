@@ -17,7 +17,8 @@
 
             <NotAuthorized>
                 <a href="register" class="dropdown-item">Register</a>
-                <a href="login" class="dropdown-item">Login</a>
+                @* Trả về url của trang mà sau khi bấm login tránh việc về trang chính miết*@
+                <a href="login?returnUrl=@NavigationManager.ToBaseRelativePath(NavigationManager.Uri)" class="dropdown-item">Login</a>
             </NotAuthorized>
         </AuthorizeView>
     </div>
