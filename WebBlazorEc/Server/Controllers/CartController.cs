@@ -27,6 +27,13 @@ namespace WebBlazorEc.Server.Controllers
             return Ok(result);
         }
 
+        [HttpPost("add")]
+        public async Task<ActionResult<ServiceResponse<bool>>> AddToCart(CartItem cartItems)    //Them mat hang chu khong phai danh sach
+        {
+            var result = await _cartItemService.AddToCart(cartItems);
+            return Ok(result);
+        }
+
         [HttpGet("count")]
         //Lấy số lượng sp trong giỏ hàng
         public async Task<ActionResult<ServiceResponse<int>>> GetCartItemsCount()

@@ -82,5 +82,30 @@ namespace WebBlazorEc.Server.Services.CartItemService
         {
             return await GetCartProducts(await _context.CartItems.Where(ci=>ci.UserId == GetUserId()).ToListAsync());
         }
+
+        public async Task<ServiceResponse<bool>> AddToCart(CartItem cartItem)
+        {
+            cartItem.UserId = GetUserId();
+
+            var same = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
+                                                                    ci.ProductTypeId == cartItem.ProductTypeId &&
+                                                                    ci.UserId == cartItem.UserId);
+
+            if (same == null)   //Neu nhu khong co sp nao giong nhau ve loai hay bien the thi them moi
+            {
+                _context.CartItems.Add(cartItem);
+            }
+            else
+            {
+                same.Quantity += cartItem.Quantity;
+            }
+
+            await _context.SaveChangesAsync();
+            
+            return new ServiceResponse<bool>
+            {
+                Data = true
+            };
+        }
     }
 }

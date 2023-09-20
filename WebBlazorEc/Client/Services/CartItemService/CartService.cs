@@ -23,38 +23,37 @@ namespace WebBlazorEc.Client.Services.CartItemService
         //Thêm sp vào giỏ hàng
         public async Task AddToCart(CartItem cartItem)
         {
-            if (await IsUserAuthenticated())
+            if (await IsUserAuthenticated())    //neu nguoi dung da dang nhap va them sp vao gio hang
             {
-                Console.WriteLine("user is authenticated");
+                await _http.PostAsJsonAsync("api/cart/add", cartItem);
             }
             else
             {
-                Console.WriteLine("user is not authenticated");
-            }
+                var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+                if (cart == null)   //Nếu cart null thì tạo một cart mới
+                {
+                    cart = new List<CartItem>();
+                }
 
-            var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
-            if (cart == null)   //Nếu cart null thì tạo một cart mới
-            {
-                cart = new List<CartItem>();
-            }
-
-            //Bài 47
-            //Xem sp cùng nhau thì tăng số lượng
-            var sameItem = cart.Find(x => x.ProductId == cartItem.ProductId && x.ProductTypeId == cartItem.ProductTypeId);
-            if (sameItem == null)
-            {
-                //Thêm sp vào CartItem
-                cart.Add(cartItem);
-            }
-            else
-            {
-                sameItem.Quantity += cartItem.Quantity;
-            }
-            //End Bài 47
+                //Bài 47
+                //Xem sp cùng nhau thì tăng số lượng
+                var sameItem = cart.Find(x => x.ProductId == cartItem.ProductId && x.ProductTypeId == cartItem.ProductTypeId);
+                if (sameItem == null)
+                {
+                    //Thêm sp vào CartItem
+                    cart.Add(cartItem);
+                }
+                else
+                {
+                    sameItem.Quantity += cartItem.Quantity;
+                }
+                //End Bài 47
 
 
-            //sử dụng bộ nhớ cục bộ để đặt thời gian
-            await _localStorageService.SetItemAsync("cart", cart);
+                //sử dụng bộ nhớ cục bộ để đặt sp vao
+                await _localStorageService.SetItemAsync("cart", cart);
+            }
+            //Lam ms so luong sp
             await GetCartItemsCount();
         }
 
