@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using Microsoft.AspNetCore.WebUtilities
+@inject ICartService CartService
 
 <PageTitle>Login</PageTitle>
 
@@ -57,6 +58,7 @@
 
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
+            await CartService.StoreCartItems(true); //Nếu đăng nhập thì chuyển thành true
 
             NavigationManager.NavigateTo(returnUrl);
         }else

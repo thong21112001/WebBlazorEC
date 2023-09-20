@@ -97,6 +97,20 @@ namespace WebBlazorEc.Client.Services.CartItemService
             }
         }
 
+        public async Task StoreCartItems(bool emptyLocalCart = false)
+        {
+            var localCart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+
+            if (localCart == null) return;
+
+            await _http.PostAsJsonAsync("api/cart", localCart);
+
+            if (emptyLocalCart)
+            {
+                await _localStorageService.RemoveItemAsync("cart");
+            }
+        }
+
         public async Task UpdateQuantity(CartProductResponse product)
         {
             var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
