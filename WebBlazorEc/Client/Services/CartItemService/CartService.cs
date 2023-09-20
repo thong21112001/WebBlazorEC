@@ -20,11 +20,6 @@ namespace WebBlazorEc.Client.Services.CartItemService
 
         public event Action OnChange;
 
-        private async Task<bool> IsUserAuthenticated()
-        {
-            return (await _authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
-        }
-
         //Thêm sp vào giỏ hàng
         public async Task AddToCart(CartItem cartItem)
         {
@@ -60,12 +55,13 @@ namespace WebBlazorEc.Client.Services.CartItemService
 
             //sử dụng bộ nhớ cục bộ để đặt thời gian
             await _localStorageService.SetItemAsync("cart", cart);
-            OnChange.Invoke();  //Sự thay đổi
+            await GetCartItemsCount();
         }
 
         //Lấy danh sách sp của giỏ hàng
         public async Task<List<CartItem>> GetCartItems()
         {
+            await GetCartItemsCount();
             var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
             if (cart == null)
             {
@@ -98,7 +94,7 @@ namespace WebBlazorEc.Client.Services.CartItemService
 
                 //Đặt lại danh sách sản phẩm sau khi xoá
                 await _localStorageService.SetItemAsync("cart", cart);
-                OnChange.Invoke();
+                await GetCartItemsCount();
             }
         }
 
@@ -131,6 +127,29 @@ namespace WebBlazorEc.Client.Services.CartItemService
                 //Đặt lại danh sách sản phẩm sau khi xoá
                 await _localStorageService.SetItemAsync("cart", cart);
             }
+        }
+
+        public async Task GetCartItemsCount()
+        {
+            if (await IsUserAuthenticated())
+            {
+                var result = await _http.GetFromJsonAsync<ServiceResponse<int>>("api/cart/count");
+                var count = result.Data;
+
+                await _localStorageService.SetItemAsync<int>("cartItemsCount", count);
+            }
+            else
+            {
+                var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+                await _localStorageService.SetItemAsync<int>("cartItemsCount", cart != null ? cart.Count : 0);
+            }
+
+            OnChange.Invoke();
+        }
+
+        private async Task<bool> IsUserAuthenticated()
+        {
+            return (await _authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
     }
 }
