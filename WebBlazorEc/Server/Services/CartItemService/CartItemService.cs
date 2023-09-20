@@ -65,8 +65,7 @@ namespace WebBlazorEc.Server.Services.CartItemService
             _context.CartItems.AddRange(cartItems);
             await _context.SaveChangesAsync();
 
-            return  await GetCartProducts(await _context.CartItems.
-                                            Where(ci => ci.UserId == GetUserId()).ToListAsync());
+            return  await GetDbCartProducts();
         }
 
         public async Task<ServiceResponse<int>> GetCartItemsCount()
@@ -76,6 +75,12 @@ namespace WebBlazorEc.Server.Services.CartItemService
             {
                 Data = count
             };
+        }
+
+        //Lay danh sach gio hang trong Db
+        public async Task<ServiceResponse<List<CartProductResponse>>> GetDbCartProducts()
+        {
+            return await GetCartProducts(await _context.CartItems.Where(ci=>ci.UserId == GetUserId()).ToListAsync());
         }
     }
 }

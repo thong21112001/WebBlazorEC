@@ -27,11 +27,20 @@ namespace WebBlazorEc.Server.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
+        [HttpGet("count")]
         //Lấy số lượng sp trong giỏ hàng
         public async Task<ActionResult<ServiceResponse<int>>> GetCartItemsCount()
         {
             return await _cartItemService.GetCartItemsCount();
+        }
+
+        [HttpGet]
+        //Lấy số lượng sp trong giỏ hàng
+        public async Task<ActionResult<ServiceResponse<List<CartProductResponse>>>> GetDbCartProducts()
+        {
+            var result = await _cartItemService.GetDbCartProducts();
+
+            return Ok(result);
         }
     }
 }
