@@ -65,7 +65,7 @@ namespace WebBlazorEc.Server.Services.CartItemService
             _context.CartItems.AddRange(cartItems);
             await _context.SaveChangesAsync();
 
-            return  await GetDbCartProducts();
+            return await GetDbCartProducts();
         }
 
         public async Task<ServiceResponse<int>> GetCartItemsCount()

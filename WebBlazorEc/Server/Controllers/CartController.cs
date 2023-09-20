@@ -34,6 +34,7 @@ namespace WebBlazorEc.Server.Controllers
             return await _cartItemService.GetCartItemsCount();
         }
 
+        //Day la controller chinh
         [HttpGet]
         //Lấy số lượng sp trong giỏ hàng
         public async Task<ActionResult<ServiceResponse<List<CartProductResponse>>>> GetDbCartProducts()
