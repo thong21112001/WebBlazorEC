@@ -113,18 +113,32 @@ namespace WebBlazorEc.Client.Services.CartItemService
 
         public async Task UpdateQuantity(CartProductResponse product)
         {
-            var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
-
-            if (cart == null)
-                return;
-
-            var cartItem = cart.Find(x => x.ProductId == product.ProductId && x.ProductTypeId == product.ProductTypeId);
-
-            if (cartItem != null)
+            if (await IsUserAuthenticated())
             {
-                cartItem.Quantity = product.Quantity;
-                //Đặt lại danh sách sản phẩm sau khi xoá
-                await _localStorageService.SetItemAsync("cart", cart);
+                var request = new CartItem
+                {
+                    ProductId = product.ProductId,
+                    Quantity = product.Quantity,
+                    ProductTypeId = product.ProductTypeId
+                };
+
+                await _http.PutAsJsonAsync("api/cart/update-quantity", request);
+            }
+            else
+            {
+                var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+
+                if (cart == null)
+                    return;
+
+                var cartItem = cart.Find(x => x.ProductId == product.ProductId && x.ProductTypeId == product.ProductTypeId);
+
+                if (cartItem != null)
+                {
+                    cartItem.Quantity = product.Quantity;
+                    //Đặt lại danh sách sản phẩm sau khi xoá
+                    await _localStorageService.SetItemAsync("cart", cart);
+                }
             }
         }
 

@@ -34,6 +34,13 @@ namespace WebBlazorEc.Server.Controllers
             return Ok(result);
         }
 
+        [HttpPut("update-quantity")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateQuantity(CartItem cartItems)   //Cap nhap san pham
+        {
+            var result = await _cartItemService.UpdateQuantity(cartItems);
+            return Ok(result);
+        }
+
         [HttpGet("count")]
         //Lấy số lượng sp trong giỏ hàng
         public async Task<ActionResult<ServiceResponse<int>>> GetCartItemsCount()
