@@ -60,6 +60,8 @@
 
             await CartService.StoreCartItems(true); //Nếu đăng nhập thì chuyển thành true
 
+            await CartService.GetCartItemsCount();
+
             NavigationManager.NavigateTo(returnUrl);
         }else
         {
