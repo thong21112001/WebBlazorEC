@@ -1,13 +1,20 @@
-﻿namespace WebBlazorEc.Server.Services.CartItemService
+﻿using System.Security.Claims;
+
+namespace WebBlazorEc.Server.Services.CartItemService
 {
     public class CartItemService : ICartItemService
     {
         private readonly DataContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CartItemService(DataContext context)
+        public CartItemService(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        //Sử dụng HttpContextAccessor để lấy id của người dùng
+        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         public async Task<ServiceResponse<List<CartProductResponse>>> GetCartProducts(List<CartItem> cartItems)
         {
@@ -52,14 +59,14 @@
             return result;
         }
 
-        public async Task<ServiceResponse<List<CartProductResponse>>> StoreCartItems(List<CartItem> cartItems, int userId)
+        public async Task<ServiceResponse<List<CartProductResponse>>> StoreCartItems(List<CartItem> cartItems)
         {
-            cartItems.ForEach(cartItems => cartItems.UserId = userId);
+            cartItems.ForEach(cartItems => cartItems.UserId = GetUserId());
             _context.CartItems.AddRange(cartItems);
             await _context.SaveChangesAsync();
 
             return  await GetCartProducts(await _context.CartItems.
-                                            Where(ci => ci.UserId == userId).ToListAsync());
+                                            Where(ci => ci.UserId == GetUserId()).ToListAsync());
         }
     }
 }

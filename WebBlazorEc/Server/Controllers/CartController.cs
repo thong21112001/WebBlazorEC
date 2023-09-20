@@ -23,9 +23,7 @@ namespace WebBlazorEc.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<CartProductResponse>>>> StoreCartItems(List<CartItem> cartItems)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            var result = await _cartItemService.StoreCartItems(cartItems,userId);
+            var result = await _cartItemService.StoreCartItems(cartItems);
             return Ok(result);
         }
     }
