@@ -19,11 +19,16 @@ namespace WebBlazorEc.Client.Services.CartItemService
         }
 
         public event Action OnChange;
-        
+
+        private async Task<bool> IsUserAuthenticated()
+        {
+            return (await _authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
+        }
+
         //Thêm sp vào giỏ hàng
         public async Task AddToCart(CartItem cartItem)
         {
-            if ((await _authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
+            if (await IsUserAuthenticated())
             {
                 Console.WriteLine("user is authenticated");
             }
