@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using WebBlazorEc.Shared;
 
 namespace WebBlazorEc.Server.Services.CartItemService
 {
@@ -124,6 +125,28 @@ namespace WebBlazorEc.Server.Services.CartItemService
             }
 
             dbCartItems.Quantity = cartItem.Quantity;
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Data = true };
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveProductFromCart(int productId, int productTypeId)
+        {
+            var dbCartItems = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == productId &&
+                                                                    ci.ProductTypeId == productTypeId &&
+                                                                    ci.UserId == GetUserId());
+
+            if (dbCartItems == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Data = false,
+                    Success = false,
+                    Message = " Cart item do not exits."
+                };
+            }
+
+            _context.CartItems.Remove(dbCartItems);
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool> { Data = true };

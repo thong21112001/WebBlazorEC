@@ -41,6 +41,13 @@ namespace WebBlazorEc.Server.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("{productId}/{productTypeId}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> RemoveProductFromCart(int productId, int productTypeId)   //Xoá sp khỏi giỏ hàng
+        {
+            var result = await _cartItemService.RemoveProductFromCart(productId, productTypeId);
+            return Ok(result);
+        }
+
         [HttpGet("count")]
         //Lấy số lượng sp trong giỏ hàng
         public async Task<ActionResult<ServiceResponse<int>>> GetCartItemsCount()
