@@ -5,6 +5,7 @@ global using WebBlazorEc.Server.Services.ProductService;
 global using WebBlazorEc.Server.Services.CategoryService;
 global using WebBlazorEc.Server.Services.CartItemService;
 global using WebBlazorEc.Server.Services.AuthService;
+global using WebBlazorEc.Server.Services.OrderService;
 global using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
@@ -29,6 +30,7 @@ builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<ICartItemService,CartItemService>();
 builder.Services.AddScoped<IAuthService,AuthService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>
        {
