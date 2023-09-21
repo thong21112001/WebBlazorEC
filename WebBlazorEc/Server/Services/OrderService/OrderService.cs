@@ -6,19 +6,16 @@ namespace WebBlazorEc.Server.Services.OrderService
     {
         private readonly DataContext _context;
         private readonly ICartItemService _cartItemService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthService _authService;
 
         public OrderService(DataContext context,
                 ICartItemService cartItemService,
-                IHttpContextAccessor httpContextAccessor)
+                IAuthService authService)
         {
             _context = context;
             _cartItemService = cartItemService;
-            _httpContextAccessor = httpContextAccessor;
+            _authService = authService;
         }
-
-        //Sử dụng HttpContextAccessor để lấy id của người dùng
-        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         public async Task<ServiceResponse<bool>> PlaceOrder()
         {
@@ -44,7 +41,7 @@ namespace WebBlazorEc.Server.Services.OrderService
             //Tạo mới bảng Order -> thêm dữ liệu vào bảng
             var order = new Order
             {
-                UserId = GetUserId(),
+                UserId = _authService.GetUserId(),
                 OrderDate = DateTime.Now,
                 TotalPrice = totalPrice,
                 OrderItems = orderItems
@@ -53,7 +50,7 @@ namespace WebBlazorEc.Server.Services.OrderService
             _context.Orders.Add(order);
 
             //Xoá các sp trong giỏ hàng với mã userid đăng nhập
-            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == GetUserId()));
+            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == _authService.GetUserId()));
 
             await _context.SaveChangesAsync();
 

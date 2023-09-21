@@ -6,16 +6,13 @@ namespace WebBlazorEc.Server.Services.CartItemService
     public class CartItemService : ICartItemService
     {
         private readonly DataContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthService _authService;
 
-        public CartItemService(DataContext context, IHttpContextAccessor httpContextAccessor)
+        public CartItemService(DataContext context, IAuthService authService)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _authService = authService;
         }
-
-        //Sử dụng HttpContextAccessor để lấy id của người dùng
-        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         public async Task<ServiceResponse<List<CartProductResponse>>> GetCartProducts(List<CartItem> cartItems)
         {
@@ -62,7 +59,7 @@ namespace WebBlazorEc.Server.Services.CartItemService
 
         public async Task<ServiceResponse<List<CartProductResponse>>> StoreCartItems(List<CartItem> cartItems)
         {
-            cartItems.ForEach(cartItems => cartItems.UserId = GetUserId());
+            cartItems.ForEach(cartItems => cartItems.UserId = _authService.GetUserId());
             _context.CartItems.AddRange(cartItems);
             await _context.SaveChangesAsync();
 
@@ -71,7 +68,7 @@ namespace WebBlazorEc.Server.Services.CartItemService
 
         public async Task<ServiceResponse<int>> GetCartItemsCount()
         {
-            var count = (await _context.CartItems.Where(ci => ci.UserId == GetUserId()).ToListAsync()).Count;
+            var count = (await _context.CartItems.Where(ci => ci.UserId == _authService.GetUserId()).ToListAsync()).Count;
             return new ServiceResponse<int>
             {
                 Data = count
@@ -81,12 +78,12 @@ namespace WebBlazorEc.Server.Services.CartItemService
         //Lay danh sach gio hang trong Db
         public async Task<ServiceResponse<List<CartProductResponse>>> GetDbCartProducts()
         {
-            return await GetCartProducts(await _context.CartItems.Where(ci=>ci.UserId == GetUserId()).ToListAsync());
+            return await GetCartProducts(await _context.CartItems.Where(ci=>ci.UserId == _authService.GetUserId()).ToListAsync());
         }
 
         public async Task<ServiceResponse<bool>> AddToCart(CartItem cartItem)
         {
-            cartItem.UserId = GetUserId();
+            cartItem.UserId = _authService.GetUserId();
 
             var same = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
                                                                     ci.ProductTypeId == cartItem.ProductTypeId &&
@@ -113,7 +110,7 @@ namespace WebBlazorEc.Server.Services.CartItemService
         {
             var dbCartItems = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == cartItem.ProductId &&
                                                                     ci.ProductTypeId == cartItem.ProductTypeId &&
-                                                                    ci.UserId == GetUserId());
+                                                                    ci.UserId == _authService.GetUserId());
             if (dbCartItems == null)
             {
                 return new ServiceResponse<bool>
@@ -134,7 +131,7 @@ namespace WebBlazorEc.Server.Services.CartItemService
         {
             var dbCartItems = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ProductId == productId &&
                                                                     ci.ProductTypeId == productTypeId &&
-                                                                    ci.UserId == GetUserId());
+                                                                    ci.UserId == _authService.GetUserId());
 
             if (dbCartItems == null)
             {
