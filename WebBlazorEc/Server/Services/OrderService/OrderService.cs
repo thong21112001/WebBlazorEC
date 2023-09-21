@@ -51,6 +51,10 @@ namespace WebBlazorEc.Server.Services.OrderService
             };
 
             _context.Orders.Add(order);
+
+            //Xoá các sp trong giỏ hàng với mã userid đăng nhập
+            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == GetUserId()));
+
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool> { Data = true };
