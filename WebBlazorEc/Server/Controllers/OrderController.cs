@@ -27,5 +27,12 @@ namespace WebBlazorEc.Server.Controllers
             var result = await _orderService.GetOrders();
             return Ok(result);
         }
+
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<ServiceResponse<OrderOverviewResponse>>> GetOrdersDetails(int orderId)
+        {
+            var result = await _orderService.GetOrdersDetails(orderId);
+            return Ok(result);
+        }
     }
 }
