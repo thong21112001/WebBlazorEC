@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace WebBlazorEc.Client.Services.OrderService
 {
     public class OrderService : IOrderService
     {
         private readonly HttpClient _http;
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private readonly IAuthService _authService;
         private readonly NavigationManager _navigationManager;
 
-        public OrderService(HttpClient http, AuthenticationStateProvider authenticationStateProvider,
+        public OrderService(HttpClient http, IAuthService authService,
                             NavigationManager navigationManager)
         {
             _http = http;
-            _authenticationStateProvider = authenticationStateProvider;
+            _authService = authService;
             _navigationManager = navigationManager;
         }
 
@@ -31,7 +30,7 @@ namespace WebBlazorEc.Client.Services.OrderService
 
         public async Task PlaceOrder()
         {
-            if (await IsUserAuthenticated())
+            if (await _authService.IsUserAuthenticated())
             {
                 await _http.PostAsync("api/order", null);
             }
@@ -39,11 +38,6 @@ namespace WebBlazorEc.Client.Services.OrderService
             {
                 _navigationManager.NavigateTo("login");
             }
-        }
-
-        private async Task<bool> IsUserAuthenticated()
-        {
-            return (await _authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
     }
 }
