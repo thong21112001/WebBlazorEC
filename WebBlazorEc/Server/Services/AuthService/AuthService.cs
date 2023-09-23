@@ -21,6 +21,9 @@ namespace WebBlazorEc.Server.Services.AuthService
 
         //Lấy id user khi đăng nhập thành công
         public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        
+        //Lấy email user
+        public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
 
         public async Task<ServiceResponse<string>> Login(string email, string password)

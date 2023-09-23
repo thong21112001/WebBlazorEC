@@ -1,17 +1,15 @@
-﻿global using WebBlazorEc.Shared;    // khi sử dụng global thì nó sẽ tự động add vào các class
-global using WebBlazorEc.Server.Data;
+﻿global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
-global using WebBlazorEc.Server.Services.ProductService;
-global using WebBlazorEc.Server.Services.CategoryService;
-global using WebBlazorEc.Server.Services.CartItemService;
+global using WebBlazorEc.Server.Data;
 global using WebBlazorEc.Server.Services.AuthService;
+global using WebBlazorEc.Server.Services.CartItemService;
+global using WebBlazorEc.Server.Services.CategoryService;
 global using WebBlazorEc.Server.Services.OrderService;
-global using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.Options;
+global using WebBlazorEc.Server.Services.PaymentService;
+global using WebBlazorEc.Server.Services.ProductService;
+global using WebBlazorEc.Shared;    // khi sử dụng global thì nó sẽ tự động add vào các class
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +29,7 @@ builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<ICartItemService,CartItemService>();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>
        {
