@@ -14,13 +14,6 @@ namespace WebBlazorEc.Server.Controllers
             _orderService = orderService;
         }
 
-        [HttpPost]  //Dạng như 1 bài viết dùng để hiển thị thông tin
-        public async Task<ActionResult<ServiceResponse<bool>>> PlaceOrder()
-        {
-            var result = await _orderService.PlaceOrder();
-            return Ok(result);
-        }
-
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<OrderOverviewResponse>>>> GetOrders()
         {

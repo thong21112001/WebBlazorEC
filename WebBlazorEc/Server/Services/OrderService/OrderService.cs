@@ -86,10 +86,10 @@ namespace WebBlazorEc.Server.Services.OrderService
             return response;
         }
 
-        public async Task<ServiceResponse<bool>> PlaceOrder()
+        public async Task<ServiceResponse<bool>> PlaceOrder(int userId)
         {
             //Lấy danh sách sp trong giỏ hàng
-            var products = (await _cartItemService.GetDbCartProducts()).Data;
+            var products = (await _cartItemService.GetDbCartProducts(userId)).Data;
             decimal totalPrice = 0;
 
             //Sử dụng vòng lặp để tính tổng số tiền của giỏ hàng
@@ -110,7 +110,7 @@ namespace WebBlazorEc.Server.Services.OrderService
             //Tạo mới bảng Order -> thêm dữ liệu vào bảng
             var order = new Order
             {
-                UserId = _authService.GetUserId(),
+                UserId = userId,
                 OrderDate = DateTime.Now,
                 TotalPrice = totalPrice,
                 OrderItems = orderItems
@@ -119,7 +119,7 @@ namespace WebBlazorEc.Server.Services.OrderService
             _context.Orders.Add(order);
 
             //Xoá các sp trong giỏ hàng với mã userid đăng nhập
-            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == _authService.GetUserId()));
+            _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.UserId == userId));
 
             await _context.SaveChangesAsync();
 
