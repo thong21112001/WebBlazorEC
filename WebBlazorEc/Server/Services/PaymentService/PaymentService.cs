@@ -9,7 +9,7 @@ namespace WebBlazorEc.Server.Services.PaymentService
         private readonly IAuthService _authService;
         private readonly IOrderService _orderService;
 
-        const string secretKey = "whsec_500a4077001c65c0d903bf27a78a237f61a28ed6a2047e66c55ccf45c1738972";
+        const string secret = "whsec_500a4077001c65c0d903bf27a78a237f61a28ed6a2047e66c55ccf45c1738972";
 
         public PaymentService(ICartItemService cartItemService,
                                 IAuthService authService,
@@ -46,6 +46,10 @@ namespace WebBlazorEc.Server.Services.PaymentService
             var options = new SessionCreateOptions
             {
                 CustomerEmail = _authService.GetUserEmail(),
+                ShippingAddressCollection = new SessionShippingAddressCollectionOptions
+                {
+                    AllowedCountries = new List<string> { "US", "VN"}
+                },
                 PaymentMethodTypes = new List<string>
                 {
                     "card"
@@ -70,7 +74,7 @@ namespace WebBlazorEc.Server.Services.PaymentService
                 var stripeEvent = EventUtility.ConstructEvent(
                         json,
                         request.Headers["Stripe-Signature"],
-                        secretKey
+                        secret
                     );
 
                 if (stripeEvent.Type == Events.CheckoutSessionCompleted)
