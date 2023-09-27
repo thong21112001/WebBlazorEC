@@ -25,9 +25,7 @@ namespace WebBlazorEc.Server.Controllers
         {
             var response = await _paymentService.FulfillOrder(Request);
             if (!response.Success)
-            {
                 return BadRequest(response.Message);
-            }
 
             return Ok(response);
         }

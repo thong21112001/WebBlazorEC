@@ -11,10 +11,18 @@
 
         public async Task<ServiceResponse<List<Product>>> GetFeaturedProducts()
         {
-            var response = new ServiceResponse<List<Product>>
+            var response = new ServiceResponse<List<Product>>();
+            try
             {
-                Data = await _context.Products.Where(x=>x.Featured).Include(p=>p.ProductVariants).ToListAsync()
-            };    
+                response = new ServiceResponse<List<Product>>
+                {
+                    Data = await _context.Products.Where(x => x.Featured).Include(p => p.ProductVariants).ToListAsync()
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return response;
         }
 
