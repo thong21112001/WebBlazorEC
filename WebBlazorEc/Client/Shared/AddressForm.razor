@@ -12,9 +12,13 @@ else if (!editAddress)
 {
     <p>
         <span>@_address.FirstName @_address.LastName</span>
+        <br/>
         <span>@_address.Street</span>
-        <span>@_address.City - @_address.State - @_address.Zip</span>
+        <br/>
+        <span>@_address.City - (@_address.State) - @_address.Zip</span>
+        <br/>
         <span>@_address.Country</span>
+        <br/>
     </p>
     <button class="btn btn-primary" @onclick="EditAddress">
         Edit address
