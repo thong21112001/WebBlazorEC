@@ -30,7 +30,7 @@
                 dbAddress.Zip = address.Zip;
                 dbAddress.Country = address.Country;
                 dbAddress.Street = address.Street;
-                response.Data = dbAddress;
+                response.Data = dbAddress; /*Được thêm vào ở folder 8 les 5*/
             }
 
             await _context.SaveChangesAsync();

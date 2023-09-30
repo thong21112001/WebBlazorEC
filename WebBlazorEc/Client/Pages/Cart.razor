@@ -1,6 +1,7 @@
 ﻿@page "/cart"
 @inject ICartService CartService
 @inject IOrderService OrderService
+@* Được thêm vào ở folder 8 les 5 *@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -40,6 +41,7 @@ else
         </div>
     </div>
 
+    @* Được thêm vào ở folder 8 les 5 *@
     @if (isAuthenticated)
     {
         <div>
@@ -47,6 +49,7 @@ else
             <AddressForm/>
         </div>
     }
+    @* Được thêm vào ở folder 8 les 5 *@
 
     <button @onclick="PlaceOrder" class="btn alert-success float-end mt-1">
         Checkout
@@ -56,11 +59,11 @@ else
 @code {
     List<CartProductResponse> _cartProductResponses = null;
     string Message = "Loading cart...";
-    bool isAuthenticated = false;
+    bool isAuthenticated = false; @* Được thêm vào ở folder 8 les 5 *@
 
     protected override async Task OnInitializedAsync()
     {
-        isAuthenticated = await AuthService.IsUserAuthenticated();
+        isAuthenticated = await AuthService.IsUserAuthenticated(); @* Được thêm vào ở folder 8 les 5 *@
         await LoadCart();
     }
 
