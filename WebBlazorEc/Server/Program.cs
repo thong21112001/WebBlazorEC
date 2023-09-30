@@ -46,6 +46,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            };
        });
 
+//builder.Services.AddHostedService<StripeWebhookListener>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
