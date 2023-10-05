@@ -12,64 +12,73 @@
     <div class="col"></div>
 </div>
 
-@foreach (var cate in CategoryService.AdminCategories)
+@if (CategoryService != null && CategoryService.AdminCategories != null)
 {
-    @if (cate.Editing)
+    foreach (var cate in CategoryService.AdminCategories)
     {
-        <EditForm Model="editCate" OnSubmit="UpdateCategory">
+        if (cate.Editing)
+        {
+            <EditForm Model="editCate" OnSubmit="UpdateCategory">
+                <div class="row">
+                    <div class="col">
+                        <InputText @bind-Value="editCate.Name" class="form-control"></InputText>
+                    </div>
+                    <div class="col">
+                        <InputText @bind-Value="editCate.Url" class="form-control"></InputText>
+                    </div>
+                    <div class="col col-visible">
+                        <InputCheckbox @bind-Value="editCate.Visible" style="transform: scale(2,2);"></InputCheckbox>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="oi oi-cloud-upload"></i>
+                        </button>
+                        <button @onclick="CancelEditing" class="btn btn-primary">
+                            <i class="oi oi-circle-x"></i>
+                        </button>
+                    </div>
+                </div>
+            </EditForm>
+        }
+        else
+        {
             <div class="row">
                 <div class="col">
-                    <InputText @bind-Value="editCate.Name" class="form-control"></InputText>
-                </div>
-                 <div class="col">
-                    <InputText @bind-Value="editCate.Url" class="form-control"></InputText>
-                </div>
-                <div class="col col-visible">
-                    <InputCheckbox @bind-Value="editCate.Visible" style="transform: scale(2,2);"></InputCheckbox>
+                    @cate.Name
                 </div>
                 <div class="col">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="oi oi-cloud-upload"></i>
+                    @cate.Url
+                </div>
+                <div class="col col-visible">
+                    <span>
+                        @(@cate.Visible ? "✔️" : "❌")
+                    </span>
+                </div>
+                <div class="col">
+                    <button @onclick="(() => EditCategory(cate))" class="btn btn-primary">
+                        <i class="oi oi-pencil"></i>
                     </button>
-                    <button @onclick="CancelEditing" class="btn btn-primary">
-                        <i class="oi oi-circle-x"></i>
+                    <button @onclick="(() => DeleteCategory(cate.Id))" class="btn btn-primary">
+                        <i class="oi oi-trash"></i>
                     </button>
                 </div>
             </div>
-        </EditForm>
+        }
+
     }
-    else
-    {
-        <div class="row">
-            <div class="col">
-                @cate.Name
-            </div>
-            <div class="col">
-                @cate.Url
-            </div>
-            <div class="col col-visible">
-               <span>
-                    @(@cate.Visible ? "✔️" : "❌")
-               </span>
-            </div>
-            <div class="col">
-                <button @onclick="(() => EditCategory(cate))" class="btn btn-primary">
-                    <i class="oi oi-pencil"></i>
-                </button>
-                <button @onclick="(() => DeleteCategory(cate.Id))" class="btn btn-primary">
-                    <i class="oi oi-trash"></i>
-                </button>
-            </div>
-        </div>    
-    }
+
+    <button class="btn btn-primary" @onclick="CreateNewCategory">
+        <i class="oi oi-plus"></i> Add new Category
+    </button>
+}
+else
+{
+    <span>BUG =))</span>
 }
 
-<button class="btn btn-primary" @onclick="CreateNewCategory">
-    <i class="oi oi-plus"></i> Add new Category
-</button>
 
 @code {
-    Category editCate = null;
+    Category? editCate = null;
 
     protected async override Task OnInitializedAsync()
     {
@@ -98,7 +107,8 @@
         if (editCate.IsNew)
         {
             await CategoryService.AddCategory(editCate);
-        }else
+        }
+        else
         {
             await CategoryService.UpdateCategory(editCate);
         }

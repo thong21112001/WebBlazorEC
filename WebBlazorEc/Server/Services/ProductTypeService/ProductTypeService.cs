@@ -20,6 +20,7 @@ namespace WebBlazorEc.Server.Services.ProductTypeService
 
         public async Task<ServiceResponse<List<ProductType>>> AddProductTypeAsync(ProductType productType)
         {
+            productType.Editing = productType.IsNew = false;
             _context.ProductTypes.Add(productType);
             await _context.SaveChangesAsync();
             

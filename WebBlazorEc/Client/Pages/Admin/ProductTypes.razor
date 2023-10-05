@@ -10,55 +10,67 @@
     <div class="col"></div>
 </div>
 
-@foreach (var prodType in ProductTypeService.ProductTypes)
+@if (ProductTypeService != null && ProductTypeService.ProductTypes != null)
 {
-    @if (prodType.Editing)
+    foreach (var prodType in ProductTypeService.ProductTypes)
     {
-        <EditForm Model="editProductType" OnSubmit="UpdateProductType">
+        if (prodType.Editing)
+        {
+            <EditForm Model="editProductType" OnSubmit="UpdateProductType">
+                <div class="row">
+                    <div class="col">
+                        <InputText @bind-Value="editProductType.Name" class="form-control"></InputText>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="oi oi-cloud-upload"></i>
+                        </button>
+                        <button @onclick="CancelProductType" class="btn btn-primary">
+                            <i class="oi oi-circle-x"></i>
+                        </button>
+                    </div>
+                </div>
+            </EditForm>
+        }
+        else
+        {
             <div class="row">
                 <div class="col">
-                    <InputText @bind-Value="editProductType.Name" class="form-control"></InputText>
+                    @prodType.Name
                 </div>
                 <div class="col">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="oi oi-cloud-upload"></i>
-                    </button>
-                    <button @onclick="CancelProductType" class="btn btn-primary">
-                        <i class="oi oi-circle-x"></i>
+                    <button @onclick="(() => EditProductType(prodType))" class="btn btn-primary">
+                        <i class="oi oi-pencil"></i>
                     </button>
                 </div>
             </div>
-        </EditForm>
+        }
     }
-    else
-    {
-        <div class="row">
-            <div class="col">
-                @prodType.Name
-            </div>
-            <div class="col">
-                <button @onclick="(() => EditProductType(prodType))" class="btn btn-primary">
-                    <i class="oi oi-pencil"></i>
-                </button>
-                <button @onclick="(() => DeleteProductType(prodType.Id))" class="btn btn-primary">
-                    <i class="oi oi-trash"></i>
-                </button>
-            </div>
-        </div>
-    }
+
+    <button class="btn btn-primary" @onclick="CreateNewProductType">
+        <i class="oi oi-plus"></i> Add new product type
+    </button>
+}
+else
+{
+    <span>BUG =))</span>
 }
 
-<button class="btn btn-primary" @onclick="CreateNewProductType">
-    <i class="oi oi-plus"></i> Add new product type
-</button>
-
 @code {
-    ProductType editProductType = null;
+    ProductType? editProductType = null;
 
     protected async override Task OnInitializedAsync()
     {
-        await ProductTypeService.GetProductTypeAsync();
-        ProductTypeService.OnChange += StateHasChanged;
+        try
+        {
+            await ProductTypeService.GetProductTypeAsync();
+            ProductTypeService.OnChange += StateHasChanged;
+        }
+        catch (Exception ex)
+        {
+            // Xử lý lỗi ở đây, ví dụ: ghi log
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 
     public void Dispose()
@@ -74,20 +86,21 @@
 
     private void CreateNewProductType()
     {
-        // editProductType = ProductTypeService.CreateNewProductType();
+        editProductType = ProductTypeService.CreateNewProductType();
     }
 
     private async Task UpdateProductType()
     {
-        // if (editProductType.IsNew)
-        // {
-        //     await ProductTypeService.AddProductType(editProductType);
-        // }
-        // else
-        // {
-        //     await ProductTypeService.UpdateProductType(editProductType);
-        // }
+        if (editProductType.IsNew)
+        {
+            await ProductTypeService.AddProductTypeAsync(editProductType);
+        }
+        else
+        {
+            await ProductTypeService.UpdateProductTypeAsync(editProductType);
+        }
 
+        //trả về từ đầu
         editProductType = new ProductType();
     }
 
@@ -95,11 +108,6 @@
     {
         editProductType = new ProductType();
         await ProductTypeService.GetProductTypeAsync();
-    }
-
-    private async Task DeleteProductType(int id)
-    {
-        // await ProductTypeService.DeleteProductType(id);
     }
 }
 
