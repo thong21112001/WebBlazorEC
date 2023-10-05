@@ -8,6 +8,7 @@ global using WebBlazorEc.Server.Services.OrderService;
 global using WebBlazorEc.Server.Services.PaymentService;
 global using WebBlazorEc.Server.Services.ProductService;
 global using WebBlazorEc.Server.Services.AddressService;
+global using WebBlazorEc.Server.Services.ProductTypeService;
 global using WebBlazorEc.Shared;    // khi sử dụng global thì nó sẽ tự động add vào các class
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>
        {
