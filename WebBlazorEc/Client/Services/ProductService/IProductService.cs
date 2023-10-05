@@ -5,6 +5,7 @@
         //Đây là một sự kiện khi mà danh sách sản phẩm thay đổi sẽ gọi cái này
         event Action ProductsChanged;
         List<Product> Products { get; set; }
+        List<Product> AdminProducts { get; set; }
         string Message { get; set; }    //Dùng để hiện thị thông báo trong ô tìm kiếm
         int CurrentPage { get; set; }
         int PageCount { get; set; }
@@ -14,5 +15,6 @@
         Task<ServiceResponse<Product>> GetProductAsync(int productId);
         Task SearchProducts(string searchText,int page);
         Task<List<string>> GetProductsSearchSuggestions(string searchText);
+        Task GetAdminProducts();
     }
 }
