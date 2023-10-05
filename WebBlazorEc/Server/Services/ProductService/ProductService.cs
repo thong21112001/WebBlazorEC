@@ -16,7 +16,10 @@
             {
                 response = new ServiceResponse<List<Product>>
                 {
-                    Data = await _context.Products.Where(x => x.Featured).Include(p => p.ProductVariants).ToListAsync()
+                    Data = await _context.Products
+                            .Where(p => p.Featured && p.Visible && !p.Deleted)
+                            .Include(p => p.ProductVariants.Where(pv => pv.Visible && !pv.Deleted))
+                            .ToListAsync()
                 };
             }
             catch (Exception ex)
@@ -31,7 +34,10 @@
         {
             var response = new ServiceResponse<List<Product>>
             {
-                Data = await _context.Products.Include(p=>p.ProductVariants).ToListAsync()
+                Data = await _context.Products
+                            .Where(p => p.Visible && !p.Deleted)
+                            .Include(p=>p.ProductVariants.Where(pv => pv.Visible && !pv.Deleted))
+                            .ToListAsync()
             };
 
             return response;
@@ -43,9 +49,9 @@
             var response = new ServiceResponse<Product>();
             //lấy sản phẩm từ csdl với bất đồng bộ, cung cấp id sản phẩm đề tìm
             var product = await _context.Products.
-                Include(p => p.ProductVariants).
+                Include(p => p.ProductVariants.Where(pv => pv.Visible && !pv.Deleted)).
                 ThenInclude(t => t.ProductType).
-                FirstOrDefaultAsync(p => p.Id == productId);
+                FirstOrDefaultAsync(p => p.Id == productId && p.Visible && !p.Deleted);
 
             if (product == null)    //nếu không có sản phẩm
             {
@@ -65,8 +71,9 @@
         {
             var response = new ServiceResponse<List<Product>> {
                 Data = await _context.Products
-                .Where(x => x.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
-                .Include(p => p.ProductVariants)
+                .Where(p => p.Category.Url.ToLower().Equals(categoryUrl.ToLower()) &&
+                        p.Visible && !p.Deleted)
+                .Include(p => p.ProductVariants.Where(pv => pv.Visible && !pv.Deleted))
                 .ToListAsync()
             };
 
@@ -111,8 +118,9 @@
             var pageResults = 2f;
             var pageCount = Math.Ceiling((await FindProductsBySeacrhText(searchText)).Count / pageResults);
             var products = await _context.Products
-                                    .Where(x => x.Title.ToLower().Contains(searchText.ToLower())
-                                        || x.Description.ToLower().Contains(searchText.ToLower()))
+                                    .Where(p => p.Title.ToLower().Contains(searchText.ToLower())
+                                        || p.Description.ToLower().Contains(searchText.ToLower()) &&
+                                        p.Visible && !p.Deleted)
                                     .Include(p => p.ProductVariants)
                                     .Skip((page - 1) * (int)pageResults)
                                     .Take((int)pageResults)
@@ -133,8 +141,9 @@
         private async Task<List<Product>> FindProductsBySeacrhText(string searchText)
         {
             return await _context.Products
-                                    .Where(x => x.Title.ToLower().Contains(searchText.ToLower())
-                                        || x.Description.ToLower().Contains(searchText.ToLower()))
+                                    .Where(p => p.Title.ToLower().Contains(searchText.ToLower())
+                                        || p.Description.ToLower().Contains(searchText.ToLower()) && 
+                                        p.Visible && !p.Deleted)
                                     .Include(p => p.ProductVariants)
                                     .ToListAsync();
         }
