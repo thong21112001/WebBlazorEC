@@ -3,10 +3,12 @@
     public class ProductService : IProductService
     {
         private readonly DataContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ProductService(DataContext context)
+        public ProductService(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ServiceResponse<List<Product>>> GetAdminProducts()
@@ -50,7 +52,7 @@
             {
                 Data = await _context.Products
                             .Where(p => p.Visible && !p.Deleted)
-                            .Include(p=>p.ProductVariants.Where(pv => pv.Visible && !pv.Deleted))
+                            .Include(p => p.ProductVariants.Where(pv => pv.Visible && !pv.Deleted))
                             .ToListAsync()
             };
 
@@ -61,11 +63,25 @@
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
             var response = new ServiceResponse<Product>();
-            //lấy sản phẩm từ csdl với bất đồng bộ, cung cấp id sản phẩm đề tìm
-            var product = await _context.Products.
-                Include(p => p.ProductVariants.Where(pv => pv.Visible && !pv.Deleted)).
-                ThenInclude(t => t.ProductType).
-                FirstOrDefaultAsync(p => p.Id == productId && p.Visible && !p.Deleted);
+            Product product = null;
+
+            if (_httpContextAccessor.HttpContext.User.IsInRole("Admin"))
+            {
+                product = await _context.Products.
+                    Include(p => p.ProductVariants.Where(pv => !pv.Deleted)).
+                    ThenInclude(t => t.ProductType).
+                    FirstOrDefaultAsync(p => p.Id == productId && p.Visible);
+            }
+            else
+            {
+                //lấy sản phẩm từ csdl với bất đồng bộ, cung cấp id sản phẩm đề tìm
+                product = await _context.Products.
+                    Include(p => p.ProductVariants.Where(pv => pv.Visible && !pv.Deleted)).
+                    ThenInclude(t => t.ProductType).
+                    FirstOrDefaultAsync(p => p.Id == productId && p.Visible && !p.Deleted);
+            }
+
+
 
             if (product == null)    //nếu không có sản phẩm
             {
@@ -83,7 +99,8 @@
         //Lấy danh sách sản phẩm theo danh mục
         public async Task<ServiceResponse<List<Product>>> GetProductsByCategory(string categoryUrl)
         {
-            var response = new ServiceResponse<List<Product>> {
+            var response = new ServiceResponse<List<Product>>
+            {
                 Data = await _context.Products
                 .Where(p => p.Category.Url.ToLower().Equals(categoryUrl.ToLower()) &&
                         p.Visible && !p.Deleted)
@@ -99,10 +116,10 @@
         {
             var products = await FindProductsBySeacrhText(searchText);
 
-            List<string> result =  new List<string>();
+            List<string> result = new List<string>();
             foreach (var item in products)
             {
-                if (item.Title.Contains(searchText,StringComparison.OrdinalIgnoreCase))
+                if (item.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
                 {
                     result.Add(item.Title);
                 }
@@ -110,11 +127,11 @@
                 if (item.Description != null)
                 {
                     var punctuation = item.Description.Where(char.IsPunctuation).Distinct().ToArray();
-                    var words = item.Description.Split().Select(x=>x.Trim(punctuation));
+                    var words = item.Description.Split().Select(x => x.Trim(punctuation));
 
                     foreach (var word in words)
                     {
-                        if (word.Contains(searchText,StringComparison.OrdinalIgnoreCase) &&
+                        if (word.Contains(searchText, StringComparison.OrdinalIgnoreCase) &&
                             !result.Contains(word))
                         {
                             result.Add(word);
@@ -122,7 +139,7 @@
                     }
                 }
             }
-            
+
             return new ServiceResponse<List<string>> { Data = result };
         }
 
@@ -156,7 +173,7 @@
         {
             return await _context.Products
                                     .Where(p => p.Title.ToLower().Contains(searchText.ToLower())
-                                        || p.Description.ToLower().Contains(searchText.ToLower()) && 
+                                        || p.Description.ToLower().Contains(searchText.ToLower()) &&
                                         p.Visible && !p.Deleted)
                                     .Include(p => p.ProductVariants)
                                     .ToListAsync();
