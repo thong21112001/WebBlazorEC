@@ -56,8 +56,9 @@ namespace WebBlazorEc.Server.Services.PaymentService
                 },
                 LineItems = lineItems,
                 Mode = "payment",
-                SuccessUrl = "https://localhost:7120/order-success",
-                CancelUrl = "https://localhost:7120/cart",
+                //Thay đổi cổng từ 7120 chạy trên Https sang 44357 chạy trên loalhost
+                SuccessUrl = "https://localhost:44357/order-success",
+                CancelUrl = "https://localhost:44357/cart",
             };
 
             var service = new SessionService();
