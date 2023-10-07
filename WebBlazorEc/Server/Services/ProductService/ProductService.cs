@@ -11,6 +11,87 @@
             _httpContextAccessor = httpContextAccessor;
         }
 
+        //Tạo sp dành cho role admin
+        public async Task<ServiceResponse<Product>> CreateProduct(Product product)
+        {
+            foreach (var productVariant in product.ProductVariants)
+            {
+                productVariant.ProductType = null;
+            }
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<Product> { Data = product };
+        }
+
+        //Cập nhập sp dành cho role admin
+        public async Task<ServiceResponse<Product>> UpdateProduct(Product product)
+        {
+            var dbProduct = await _context.Products.FindAsync(product.Id);
+
+            if (dbProduct == null)
+            {
+                return new ServiceResponse<Product>
+                {
+                    Success = false,
+                    Message = "Product not found"
+                };
+            }
+
+            dbProduct.Title = product.Title;
+            dbProduct.Description = product.Description;
+            dbProduct.ImageUrl = product.ImageUrl;
+            dbProduct.CategoryId = product.CategoryId;
+            dbProduct.Visible = product.Visible;
+            await _context.SaveChangesAsync();
+
+            foreach (var prodVar in product.ProductVariants)
+            {
+                var dbprodVariant = await _context.ProductVariants
+                                .SingleOrDefaultAsync(pv => pv.ProductId == prodVar.ProductId &&
+                                pv.ProductTypeId == prodVar.ProductTypeId);
+                if (dbprodVariant == null)
+                {
+                    prodVar.ProductType = null;
+                    _context.ProductVariants.Add(prodVar);
+                }
+                else
+                {
+                    dbprodVariant.ProductTypeId = prodVar.ProductTypeId;
+                    dbprodVariant.Price = prodVar.Price;
+                    dbprodVariant.OriginalPrice = prodVar.OriginalPrice;
+                    dbprodVariant.Visible = prodVar.Visible;
+                    dbprodVariant.Deleted = prodVar.Deleted;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<Product> { Data = product };
+        }
+
+        //Xoá sp dành cho role admin
+        public async Task<ServiceResponse<bool>> DeleteProduct(int productId)
+        {
+            var dbProduct = await _context.Products.FindAsync(productId);
+
+            if (dbProduct == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Data = false,
+                    Success = false,
+                    Message = "Product not found"
+                };
+            }
+
+            dbProduct.Deleted = true;
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Data = true };
+        }
+
+        //Lấy danh sách sp trong admin
         public async Task<ServiceResponse<List<Product>>> GetAdminProducts()
         {
             var response = new ServiceResponse<List<Product>>
@@ -25,6 +106,7 @@
             return response;
         }
 
+        //Hiển thị sp nổi bật ở user
         public async Task<ServiceResponse<List<Product>>> GetFeaturedProducts()
         {
             var response = new ServiceResponse<List<Product>>();
@@ -45,7 +127,7 @@
             return response;
         }
 
-        //Lấy danh sách sản phẩm
+        //Lấy danh sách tất cảs sản phẩm ở user
         public async Task<ServiceResponse<List<Product>>> GetProductAsync()
         {
             var response = new ServiceResponse<List<Product>>
@@ -59,7 +141,7 @@
             return response;
         }
 
-        //Lấy chi tiết sản phẩm
+        //Lấy chi tiết sản phẩm dành cho admin và user
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
             var response = new ServiceResponse<Product>();
@@ -80,7 +162,6 @@
                     ThenInclude(t => t.ProductType).
                     FirstOrDefaultAsync(p => p.Id == productId && p.Visible && !p.Deleted);
             }
-
 
 
             if (product == null)    //nếu không có sản phẩm
