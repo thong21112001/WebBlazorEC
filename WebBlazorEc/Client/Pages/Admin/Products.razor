@@ -1,0 +1,71 @@
+﻿@page "/admin/products"
+@inject IProductService ProductService
+@attribute [Authorize(Roles = "Admin")]
+@* @implements IDisposable *@
+
+<h3>Products</h3>
+
+@if (ProductService.AdminProducts == null)
+{
+    <span>Load... bug =))</span>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Product</th>
+                <th>Variant</th>
+                <th>Price</th>
+                <th>Visible</th>
+                <th>Function</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <Virtualize Items="ProductService.AdminProducts" Context="product">
+                <tr>
+                    <td><img src="@product.ImageUrl"/></td>
+                    <td>@product.Title</td>
+                    <td>
+                        @foreach (var item in product.ProductVariants)
+                        {
+                            <span>@item.ProductType.Name</span>
+                            <br/>
+
+                        }
+                    </td>
+                    <td>
+                        @foreach (var item in product.ProductVariants)
+                        {
+                            <span>@item.Price</span>
+                            <br />
+
+                        }
+                    </td>
+                    <td>
+                        @(product.Visible ? "✔️" : "❌")
+                    </td>
+                    <td>
+                        <button @onclick="(() => EditProduct(product.Id))" class="btn btn-primary">
+                            <i class="oi oi-pencil"></i>
+                        </button>
+                    </td>
+                </tr>
+            </Virtualize>
+        </tbody>
+    </table>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ProductService.GetAdminProducts();
+    }
+
+    void EditProduct(int productId)
+    {
+
+    }
+}
