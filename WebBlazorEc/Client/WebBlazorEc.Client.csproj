@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Admin\EditProduct.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11" />
@@ -24,11 +28,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Admin\EditProduct.razor" />
     <_ContentIncludedByDefault Remove="Shared\Search.razor" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Pages\Admin\EditProduct.razor" />
     <None Include="Shared\Search.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Admin\EditProduct.razor" />
   </ItemGroup>
 
 </Project>

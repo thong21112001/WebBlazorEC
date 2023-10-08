@@ -43,7 +43,7 @@
             dbProduct.ImageUrl = product.ImageUrl;
             dbProduct.CategoryId = product.CategoryId;
             dbProduct.Visible = product.Visible;
-            await _context.SaveChangesAsync();
+            dbProduct.Featured = product.Featured;
 
             foreach (var prodVar in product.ProductVariants)
             {
