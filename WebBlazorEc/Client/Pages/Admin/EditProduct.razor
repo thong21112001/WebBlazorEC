@@ -117,7 +117,7 @@ else
         <button type="submit" class="btn btn-primary float-end">
             @btnText
         </button>
-        
+
         <ValidationSummary></ValidationSummary>
     </EditForm>
 }
@@ -188,7 +188,8 @@ else
         {
             var result = await ProductService.CreateProduct(_product);
             NavigationManager.NavigateTo($"admin/product/{result.Id}");
-        }else
+        }
+        else
         {
             _product.IsNew = false;
             _product = await ProductService.UpdateProduct(_product);
