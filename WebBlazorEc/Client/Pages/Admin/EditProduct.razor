@@ -62,28 +62,28 @@ else
                         }
                     </InputSelect>
                 </div>
-            </div>
 
-            <div class="col">
-                <InputNumber @bind-Value="@variant.Price" class="form-control" disabled="@variant.Deleted"></InputNumber>
-            </div>
+                <div class="col">
+                    <InputNumber @bind-Value="@variant.Price" class="form-control" disabled="@variant.Deleted"></InputNumber>
+                </div>
 
-            <div class="col">
-                <InputNumber @bind-Value="@variant.OriginalPrice" class="form-control" disabled="@variant.Deleted"></InputNumber>
-            </div>
+                <div class="col">
+                    <InputNumber @bind-Value="@variant.OriginalPrice" class="form-control" disabled="@variant.Deleted"></InputNumber>
+                </div>
 
-            <div class="col col-visible">
-                <InputCheckbox @bind-Value="@variant.Visible" style="transform: scale(2,2);" disabled="@variant.Deleted"></InputCheckbox>
-            </div>
+                <div class="col col-visible">
+                    <InputCheckbox @bind-Value="@variant.Visible" style="transform: scale(2,2);" disabled="@variant.Deleted"></InputCheckbox>
+                </div>
 
-            <div class="col">
-                <button @onclick="@(() => RemoveProductVariant(variant.ProductTypeId))" class="btn btn-primary" disabled="@variant.Deleted">
-                    <i class="oi oi-trash"></i>
-                </button>
+                <div class="col">
+                    <button type="button" @onclick="@(() => RemoveProductVariant(variant.ProductTypeId))" class="btn btn-primary" disabled="@variant.Deleted">
+                        <i class="oi oi-trash"></i>
+                    </button>
+                </div>
             </div>
         }
 
-        <button class="btn btn-primary" @onclick="AddProductVariant">
+        <button type="button" class="btn btn-primary" @onclick="AddProductVariant">
             <i class="oi oi-plus"></i> Add product variant
         </button>
 
