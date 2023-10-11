@@ -10,6 +10,7 @@ namespace WebBlazorEc.Shared
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
+        public List<Image> Images { get; set; } = new List<Image>();    // Giả sử đây là một lisst danh sahcs ảnh trống
         //Xoá column Price đi vì trong biến thể của nó đã có Price và OriginalPrice
         public bool Featured { get; set; } = false; //Sản phẩm hot hay không
         public int CategoryId { get; set; }
