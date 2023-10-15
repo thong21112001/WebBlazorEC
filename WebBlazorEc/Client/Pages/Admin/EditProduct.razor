@@ -34,8 +34,24 @@ else
             <InputText id="imageUrl" @bind-Value="@_product.ImageUrl" class="form-control"></InputText>
         </div>
 
+        @* Hiển thị ra danh sách ảnh của 1 sp hoặc 1 ảnh *@
         <div class="mb-0">
-            <img src="@_product.ImageUrl" />
+            @if (!string.IsNullOrEmpty(_product.ImageUrl))
+            {
+                <img src="@_product.ImageUrl" />
+            }
+            else
+            {
+                @foreach (var item in _product.Images)
+                {
+                    <img src="@item.Data" />
+                }
+            }
+        </div>
+
+        <div class="mb-0">
+            <label for="images">Image List</label>
+            <InputFile id="images" OnChange="OnFileChange" multiple class="form-control"></InputFile>
         </div>
 
         <div class="mb-0">
@@ -213,6 +229,27 @@ else
         {
             await ProductService.DeleteProduct(_product);
             NavigationManager.NavigateTo("admin/products");
+        }
+    }
+
+    async void OnFileChange(InputFileChangeEventArgs e)
+    {
+        var format = "image/png";
+        //Lấy từng ảnh 1 trong sự kiện e
+        foreach (var image in e.GetMultipleFiles(int.MaxValue))
+        {
+            //Điều chỉnh kích thước ảnh
+            var resizedImage = await image.RequestImageFileAsync(format, 200, 200);
+
+            //Tạo 1 bộ nhớ đệm -> và hình ảnh mảng đã thay đổi kích thước
+            var buffer = new byte[resizedImage.Size];
+
+            await resizedImage.OpenReadStream().ReadAsync(buffer); //Đọc bộ nhớ đệm không đồng bộ
+
+            var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+            _product.Images.Add(new Image { Data = imageData });
+
         }
     }
 }
