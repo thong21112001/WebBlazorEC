@@ -35,7 +35,7 @@ else
         </div>
 
         @* Hiển thị ra danh sách ảnh của 1 sp hoặc 1 ảnh *@
-        <div class="mb-0">
+        <div class="mb-0" style="display:flex; flex-wrap:wrap;flex-direction:row;justify-content:center;">
             @if (!string.IsNullOrEmpty(_product.ImageUrl))
             {
                 <img src="@_product.ImageUrl" />
@@ -44,8 +44,19 @@ else
             {
                 @foreach (var item in _product.Images)
                 {
-                    <img src="@item.Data" />
-                    <button type="button" @onclick="(() => RemoveImage(item.Id))">Remove</button>
+                    @* <img src="@item.Data" />
+                    <button type="button" @onclick="(() => RemoveImage(item.Id))">Remove</button> *@
+                    <MudCard Class="ma-2">
+                        <MudCardContent>
+                            <MudImage Src="@item.Data"/>
+                        </MudCardContent>
+
+                        <MudCardActions Style="justify-content:center;">
+                            <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => RemoveImage(@item.Id))">
+                                Remove
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
                 }
             }
         </div>
