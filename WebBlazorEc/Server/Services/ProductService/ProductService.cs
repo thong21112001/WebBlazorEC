@@ -27,7 +27,9 @@
         //Cập nhập sp dành cho role admin
         public async Task<ServiceResponse<Product>> UpdateProduct(Product product)
         {
-            var dbProduct = await _context.Products.FindAsync(product.Id);
+            var dbProduct = await _context.Products
+                                            .Include(p => p.Images)
+                                            .FirstOrDefaultAsync(p => p.Id == product.Id);
 
             if (dbProduct == null)
             {
@@ -44,6 +46,15 @@
             dbProduct.CategoryId = product.CategoryId;
             dbProduct.Visible = product.Visible;
             dbProduct.Featured = product.Featured;
+
+            // lấy tất cả hình ảnh của sp ra -> xoá toàn bộ -> rồi thêm lại
+            //Vấn đề xảy ra là: Các id hình cũ sẽ mất đi
+            var productImages = dbProduct.Images;
+            _context.Images.RemoveRange(productImages);
+
+            dbProduct.Images = product.Images;
+
+
 
             foreach (var prodVar in product.ProductVariants)
             {

@@ -45,6 +45,7 @@ else
                 @foreach (var item in _product.Images)
                 {
                     <img src="@item.Data" />
+                    <button type="button" @onclick="(() => RemoveImage(item.Id))">Remove</button>
                 }
             }
         </div>
@@ -250,6 +251,15 @@ else
 
             _product.Images.Add(new Image { Data = imageData });
 
+        }
+    }
+
+    void RemoveImage(int id)
+    {
+        var image = _product.Images.FirstOrDefault(i => i.Id == id);
+        if (image != null)
+        {
+            _product.Images.Remove(image);
         }
     }
 }
